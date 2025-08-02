@@ -1,0 +1,264 @@
+/* Issue Card component styles */
+
+.issue-card {
+    background: var(--background-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.issue-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.issue-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+}
+
+.issue-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.status-badge,
+.category-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+
+/* Status badge colors */
+
+.status-reported {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-in-progress {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-resolved {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+
+/* Category badge colors */
+
+.category-roads {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.category-lighting {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.category-water {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.category-cleanliness {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.category-safety {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.category-obstructions {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.category-default {
+    background: var(--background-secondary);
+    color: var(--text-secondary);
+}
+
+.flag-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem;
+    background: transparent;
+    border: none;
+    border-radius: 0.25rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.flag-button:hover {
+    background: var(--background-secondary);
+    color: var(--error-color);
+}
+
+.issue-content {
+    margin-bottom: 1rem;
+}
+
+.issue-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+}
+
+.issue-description {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.issue-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.detail-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.issue-photos {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    overflow-x: auto;
+}
+
+.photo-thumbnail {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: var(--background-secondary);
+}
+
+.photo-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.more-photos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: var(--background-secondary);
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.issue-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.action-stats {
+    display: flex;
+    gap: 1rem;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.stat-item.flag-count {
+    color: var(--error-color);
+}
+
+.view-details {
+    color: var(--primary-color);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.view-text {
+    transition: transform 0.2s ease;
+}
+
+.issue-card:hover .view-text {
+    transform: translateX(2px);
+}
+
+
+/* Mobile responsive */
+
+@media (max-width: 768px) {
+    .issue-card {
+        padding: 0.75rem;
+    }
+    .issue-title {
+        font-size: 1rem;
+    }
+    .issue-description {
+        font-size: 0.8125rem;
+    }
+    .detail-item {
+        font-size: 0.8125rem;
+    }
+    .photo-thumbnail {
+        width: 50px;
+        height: 50px;
+    }
+    .more-photos {
+        width: 50px;
+        height: 50px;
+    }
+}

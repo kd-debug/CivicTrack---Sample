@@ -1,0 +1,223 @@
+import React, { useState, useEffect } from 'react';
+import { User, Mail, Shield, Save, X, Edit3 } from 'lucide-react';
+import { useApp } from '../hooks/useApp';
+import { authService } from '../services/authService';
+import './ProfilePage.css';
+
+const ProfilePage = () => {
+    const { state, actions } = useApp();
+    const { user } = state;
+
+    const [isEditing, setIsEditing] = useState(false);
+    const [displayName, setDisplayName] = useState(user.name || '');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        setDisplayName(user.name || '');
+    }, [user.name]);
+
+    const handleSave = async () => {
+        if (!displayName.trim()) {
+            setError('Display name cannot be empty');
+            return;
+        }
+
+        setIsLoading(true);
+        setError('');
+
+        try {
+            // Update profile in database
+            const updatedProfile = await authService.updateProfile(user.id, {
+                name: displayName.trim()
+            });
+
+            // Update local state
+            actions.setUser({
+                name: updatedProfile.name
+            });
+
+            // Show success notification
+            actions.addNotification({
+                id: Date.now().toString(),
+                type: 'success',
+                title: 'Profile Updated',
+                message: 'Your display name has been updated successfully',
+                timestamp: new Date().toISOString()
+            });
+
+            setIsEditing(false);
+        } catch (error) {
+            setError('Failed to update profile: ' + error.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleCancel = () => {
+        setDisplayName(user.name || '');
+        setError('');
+        setIsEditing(false);
+    };
+
+    const getRoleDisplayName = (role) => {
+        switch (role) {
+            case 'admin':
+                return 'Administrator';
+            case 'citizen':
+                return 'Citizen';
+            default:
+                return role;
+        }
+    };
+
+    if (!user.isAuthenticated) {
+        return (
+            <div className="profile-page">
+                <div className="profile-container">
+                    <div className="auth-required">
+                        <User size={48} />
+                        <h2>Authentication Required</h2>
+                        <p>Please sign in to view your profile.</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="profile-page">
+            <div className="profile-container">
+                <div className="profile-header">
+                    <div className="profile-avatar">
+                        <User size={32} />
+                    </div>
+                    <div className="profile-title">
+                        <h1>Profile</h1>
+                        <p>Manage your account information</p>
+                    </div>
+                </div>
+
+                <div className="profile-content">
+                    <div className="profile-section">
+                        <div className="section-header">
+                            <h2>Account Information</h2>
+                            {!isEditing && (
+                                <button
+                                    className="edit-button"
+                                    onClick={() => setIsEditing(true)}
+                                    aria-label="Edit profile"
+                                >
+                                    <Edit3 size={16} />
+                                    Edit
+                                </button>
+                            )}
+                        </div>
+
+                        <div className="profile-fields">
+                            {/* Display Name Field */}
+                            <div className="profile-field">
+                                <div className="field-label">
+                                    <User size={16} />
+                                    <span>Display Name</span>
+                                </div>
+                                {isEditing ? (
+                                    <div className="field-input">
+                                        <input
+                                            type="text"
+                                            value={displayName}
+                                            onChange={(e) => setDisplayName(e.target.value)}
+                                            placeholder="Enter your display name"
+                                            maxLength={50}
+                                        />
+                                        {error && <div className="error-message">{error}</div>}
+                                    </div>
+                                ) : (
+                                    <div className="field-value">
+                                        {user.name || 'Not set'}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Email Field (Read-only) */}
+                            <div className="profile-field">
+                                <div className="field-label">
+                                    <Mail size={16} />
+                                    <span>Email Address</span>
+                                </div>
+                                <div className="field-value">
+                                    {user.email}
+                                    <span className="read-only-badge">Read-only</span>
+                                </div>
+                            </div>
+
+                            {/* Role Field (Read-only) */}
+                            <div className="profile-field">
+                                <div className="field-label">
+                                    <Shield size={16} />
+                                    <span>Role</span>
+                                </div>
+                                <div className="field-value">
+                                    {getRoleDisplayName(user.role)}
+                                    <span className="read-only-badge">Read-only</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Action Buttons */}
+                        {isEditing && (
+                            <div className="profile-actions">
+                                <button
+                                    className="save-button"
+                                    onClick={handleSave}
+                                    disabled={isLoading || !displayName.trim()}
+                                >
+                                    {isLoading ? (
+                                        <div className="loading-spinner" />
+                                    ) : (
+                                        <Save size={16} />
+                                    )}
+                                    {isLoading ? 'Saving...' : 'Save Changes'}
+                                </button>
+                                <button
+                                    className="cancel-button"
+                                    onClick={handleCancel}
+                                    disabled={isLoading}
+                                >
+                                    <X size={16} />
+                                    Cancel
+                                </button>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Additional Information */}
+                    <div className="profile-section">
+                        <h2>Account Details</h2>
+                        <div className="profile-fields">
+                            <div className="profile-field">
+                                <div className="field-label">
+                                    <span>Account Status</span>
+                                </div>
+                                <div className="field-value">
+                                    <span className="status-badge active">Active</span>
+                                </div>
+                            </div>
+
+                            <div className="profile-field">
+                                <div className="field-label">
+                                    <span>Member Since</span>
+                                </div>
+                                <div className="field-value">
+                                    {new Date().toLocaleDateString()}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default ProfilePage; 

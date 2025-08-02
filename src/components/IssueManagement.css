@@ -1,0 +1,29 @@
+.issue-management {
+    /* Styles for IssueManagement component */
+}
+
+.hidden-issue {
+    opacity: 0.6;
+    background-color: #f8f9fa;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+th,
+td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+th {
+    background-color: #e9ecef;
+}
+
+.error-message {
+    color: #dc3545;
+}

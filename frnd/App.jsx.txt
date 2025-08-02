@@ -1,0 +1,51 @@
+import React from 'react';
+import { AppProvider } from './context/AppContext';
+import { useApp } from './hooks/useApp';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import HomePage from './pages/HomePage';
+import { MyReportsPage } from './pages/MyReportsPage';
+import ProfilePage from './pages/ProfilePage';
+import AdminDashboard from './pages/AdminDashboard';
+import NotificationToast from './components/NotificationToast';
+import './App.css';
+
+const AppContent = () => {
+  const { state } = useApp();
+  const { currentPage } = state;
+
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case 'my-reports':
+        return <MyReportsPage />;
+      case 'profile':
+        return <ProfilePage />;
+      case 'admin-dashboard':
+        return <AdminDashboard />;
+      case 'home':
+      default:
+        return <HomePage />;
+    }
+  };
+
+  return (
+    <div className="app">
+      <Header />
+      <main className="main-content">
+        {renderCurrentPage()}
+      </main>
+      <Sidebar />
+      <NotificationToast />
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
+  );
+}
+
+export default App;

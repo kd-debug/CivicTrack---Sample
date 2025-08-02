@@ -1,0 +1,241 @@
+import React, { useState } from 'react';
+import { X, Mail, Lock, User, Shield } from 'lucide-react';
+import { authService } from '../services/authService';
+import { USER_ROLES } from '../constants';
+import './AuthModal.css';
+
+const AuthModal = ({ isOpen, onClose, mode = 'login', onSuccess }) => {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    name: '',
+    role: USER_ROLES.CITIZEN
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [currentMode, setCurrentMode] = useState(mode);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    setError(''); // Clear error when user types
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      if (currentMode === 'signup') {
+        // Validation for signup
+        if (formData.password !== formData.confirmPassword) {
+          throw new Error('Passwords do not match');
+        }
+        if (formData.password.length < 6) {
+          throw new Error('Password must be at least 6 characters');
+        }
+        if (!formData.name.trim()) {
+          throw new Error('Name is required');
+        }
+
+        const result = await authService.signUp(formData.email, formData.password, {
+          name: formData.name,
+          role: formData.role
+        });
+
+        // For signup, show success message but don't auto-close
+        setError('✅ Account created! Please check your email to verify your account, then you can sign in.');
+        
+        // Auto-switch to login mode after 3 seconds
+        setTimeout(() => {
+          setCurrentMode('login');
+          setError('');
+          setFormData({
+            email: formData.email, // Keep email for convenience
+            password: '',
+            confirmPassword: '',
+            name: '',
+            role: USER_ROLES.CITIZEN
+          });
+        }, 3000);
+      } else {
+        // Login
+        const result = await authService.signIn(formData.email, formData.password);
+        onSuccess && onSuccess(result);
+        onClose();
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const switchMode = () => {
+    setCurrentMode(currentMode === 'login' ? 'signup' : 'login');
+    setError('');
+    setFormData({
+      email: '',
+      password: '',
+      confirmPassword: '',
+      name: '',
+      role: USER_ROLES.CITIZEN
+    });
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="modal-overlay">
+      <div className="auth-modal">
+        <div className="auth-header">
+          <h2>{currentMode === 'login' ? 'Sign In' : 'Create Account'}</h2>
+          <button className="close-button" onClick={onClose}>
+            <X size={20} />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          {currentMode === 'signup' && (
+            <>
+              <div className="form-group">
+                <label htmlFor="name">
+                  <User size={16} />
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="role">
+                  <Shield size={16} />
+                  Account Type
+                </label>
+                <select
+                  id="role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <option value={USER_ROLES.CITIZEN}>Citizen</option>
+                  <option value={USER_ROLES.ADMIN}>Administrator</option>
+                </select>
+                <small className="role-help">
+                  {formData.role === USER_ROLES.ADMIN 
+                    ? 'Admins can manage issues and moderate content'
+                    : 'Citizens can report issues and add comments'
+                  }
+                </small>
+              </div>
+            </>
+          )}
+
+          <div className="form-group">
+            <label htmlFor="email">
+              <Mail size={16} />
+              Email Address
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="password">
+              <Lock size={16} />
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              placeholder="Enter your password"
+              required
+              minLength="6"
+            />
+          </div>
+
+          {currentMode === 'signup' && (
+            <div className="form-group">
+              <label htmlFor="confirmPassword">
+                <Lock size={16} />
+                Confirm Password
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                placeholder="Confirm your password"
+                required
+                minLength="6"
+              />
+            </div>
+          )}
+
+          {error && (
+            <div className={`auth-message ${error.includes('email') ? 'success' : 'error'}`}>
+              {error}
+            </div>
+          )}
+
+          <button type="submit" className="auth-submit" disabled={loading}>
+            {loading 
+              ? 'Processing...' 
+              : currentMode === 'login' ? 'Sign In' : 'Create Account'
+            }
+          </button>
+        </form>
+
+        <div className="auth-switch">
+          {currentMode === 'login' ? (
+            <p>
+              Don't have an account?{' '}
+              <button type="button" onClick={switchMode} className="link-button">
+                Sign up here
+              </button>
+            </p>
+          ) : (
+            <p>
+              Already have an account?{' '}
+              <button type="button" onClick={switchMode} className="link-button">
+                Sign in here
+              </button>
+            </p>
+          )}
+        </div>
+
+        <div className="auth-footer">
+          <small>
+            By {currentMode === 'login' ? 'signing in' : 'creating an account'}, you agree to help make your community better through civic engagement.
+          </small>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AuthModal;

@@ -1,0 +1,126 @@
+/* LoadingSpinner.css */
+
+.loading-spinner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 1rem;
+}
+
+.loading-spinner.small {
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
+.loading-spinner.large {
+    gap: 1rem;
+    padding: 2rem;
+}
+
+.spinner-icon {
+    animation: spin 1s linear infinite;
+}
+
+.loading-spinner.small .spinner-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.loading-spinner.medium .spinner-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.loading-spinner.large .spinner-icon {
+    width: 32px;
+    height: 32px;
+}
+
+.loading-spinner.primary .spinner-icon {
+    color: var(--primary-color);
+}
+
+.loading-spinner.secondary .spinner-icon {
+    color: var(--secondary-color);
+}
+
+.loading-spinner.success .spinner-icon {
+    color: var(--success-color);
+}
+
+.loading-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin: 0;
+}
+
+.loading-spinner.small .loading-text {
+    font-size: 0.75rem;
+}
+
+.loading-spinner.large .loading-text {
+    font-size: 1rem;
+}
+
+
+/* Full screen overlay */
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    background: white;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-color);
+}
+
+.loading-content .spinner-icon {
+    width: 48px;
+    height: 48px;
+    color: var(--primary-color);
+}
+
+.loading-content .loading-text {
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* Dark theme support */
+
+[data-theme="dark"] .loading-overlay {
+    background: rgba(17, 24, 39, 0.9);
+}
+
+[data-theme="dark"] .loading-content {
+    background: var(--background-primary);
+}
