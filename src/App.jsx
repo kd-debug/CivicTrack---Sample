@@ -8,7 +8,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import UserProfilePage from './pages/UserProfilePage';
 import NotificationToast from './components/NotificationToast';
 import './App.css';
-
+import TotalReportsPage from './pages/TotalReportsPage';
 const AppContent = () => {
   const { state } = useApp();
   const { currentPage } = state;
@@ -21,6 +21,8 @@ const AppContent = () => {
         return <AdminDashboard />;
       case 'profile':
         return <UserProfilePage />;
+      case 'total-reports':
+        return <TotalReportsPage />;
       case 'home':
       default:
         return <HomePage />;

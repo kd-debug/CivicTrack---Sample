@@ -159,10 +159,12 @@ a:hover {
 /* Loading animation */
 
 @keyframes pulse {
+
     0%,
     100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.5;
     }
@@ -201,6 +203,7 @@ a:hover {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -212,6 +215,7 @@ a:hover {
         opacity: 0;
         transform: translateX(30px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -219,10 +223,12 @@ a:hover {
 }
 
 @keyframes pulse {
+
     0%,
     100% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.05);
     }
@@ -232,16 +238,19 @@ a:hover {
     0% {
         background-position: -200px 0;
     }
+
     100% {
         background-position: 200px 0;
     }
 }
 
 @keyframes float {
+
     0%,
     100% {
         transform: translateY(0px);
     }
+
     50% {
         transform: translateY(-10px);
     }
@@ -358,6 +367,7 @@ a:hover {
         padding: var(--spacing-md);
         margin: var(--spacing-sm);
     }
+
     .btn {
         padding: 0.625rem 1.25rem;
         font-size: 0.8rem;
@@ -368,6 +378,7 @@ a:hover {
 /* Accessibility improvements */
 
 @media (prefers-reduced-motion: reduce) {
+
     *,
     *::before,
     *::after {
